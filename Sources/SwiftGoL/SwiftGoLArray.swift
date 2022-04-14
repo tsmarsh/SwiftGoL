@@ -1,29 +1,25 @@
-import simd
 
-
-let NEIGHBOURS: Set<simd_long2> = [simd_long2(x: -1, y: -1),
-                                     simd_long2(x: -1, y: 0),
-                                     simd_long2(x: -1, y: 1),
-                                     simd_long2(x: 0, y: -1),
-                                     simd_long2(x: 0, y: 1),
-                                     simd_long2(x: 1, y: -1),
-                                     simd_long2(x: 1, y: 0),
-                                     simd_long2(x: 1, y: 1)]
-
-
-public struct SwiftGoL {
+public class World {
+    public var height: Int
+    public var width: Int
     
-    static func isAlive(world: Set<[Int]>, coords: [Int]) -> Bool{
-        return world.contains(coords)
+    public var world: [Bool]
+    
+    init(height: Int, width: Int){
+        self.world = Array(repeating: false, count: height * width)
+    }
+}
+
+public struct SwiftGoLArray {
+    static func isAlive(world: World, coords: [Int]) -> Bool{
+        return false
     }
 
-    static func bringToLife(world: inout Set<[Int]>, coords: [Int]) -> Set<[Int]>{
-        world.insert(coords)
+    static func bringToLife(world: World, coords: [Int]) -> World{
         return world
     }
     
-    static func kill(world: inout Set<[Int]>, coords: [Int]) -> Set<[Int]> {
-        world.remove(coords)
+    static func kill(world: World, coords: [Int]) -> World{
         return world
     }
     
@@ -36,10 +32,10 @@ public struct SwiftGoL {
         })
     }
     
-    static func countLivingNeighbours(world: Set<[Int]>, coords: [Int]) -> Int {
+    static func countLivingNeighbours(world: World, coords: [Int]) -> Int {
         let neighbours = getNeighbours(coords: coords)
         return neighbours.filter {
-            world.contains($0)
+            isAlive(world, $0)
         }.count
     }
     
@@ -73,5 +69,3 @@ public struct SwiftGoL {
         return new_world
     }
 }
-
-

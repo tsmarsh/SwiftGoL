@@ -1,16 +1,23 @@
-import XCTest
-@testable import SwiftGoL
+//
+//  SwiftGolArrayTest.swift
+//  
+//
+//  Created by Tom Marsh on 3/20/22.
+//
 
-final class SwiftGoLTests: XCTestCase {
-    
+import XCTest
+import SwiftGoLArray
+
+class SwiftGolArrayTest: XCTestCase {
+
     func testTheWorldStartsDead() {
-        let world: Set<[Int]> = []
+        let world: [Bool] = World(height: 10, width: 10)
     
-        XCTAssertFalse(SwiftGoL.isAlive(world: world, coords: [0,0]))
+        XCTAssertFalse(SwiftGoLArray.isAlive(world: world, coords: [0,0]))
     }
     
     func testACellCanComeToLife() {
-        var world: Set<[Int]> = []
+        let world: [Bool] = World(height: 10, width: 10)
         
         XCTAssertFalse(SwiftGoL.isAlive(world: world, coords: [0, 0]))
         world = SwiftGoL.bringToLife(world: &world, coords: [0,0])
@@ -52,4 +59,5 @@ final class SwiftGoLTests: XCTestCase {
         let world: Set<[Int]> = [[0,0], [1,0], [1,2]]
         measure{SwiftGoL.next(world: world)}
     }
+
 }
