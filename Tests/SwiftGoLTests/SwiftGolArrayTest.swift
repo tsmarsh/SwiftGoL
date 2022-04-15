@@ -6,30 +6,30 @@
 //
 
 import XCTest
-import SwiftGoLArray
+@testable import SwiftGoL
 
 class SwiftGolArrayTest: XCTestCase {
 
     func testTheWorldStartsDead() {
-        let world: [Bool] = World(height: 10, width: 10)
+        let world = World(height: 10, width: 10)
     
         XCTAssertFalse(SwiftGoLArray.isAlive(world: world, coords: [0,0]))
     }
     
     func testACellCanComeToLife() {
-        let world: [Bool] = World(height: 10, width: 10)
+        var world = World(height: 10, width: 10)
         
-        XCTAssertFalse(SwiftGoL.isAlive(world: world, coords: [0, 0]))
-        world = SwiftGoL.bringToLife(world: &world, coords: [0,0])
-        XCTAssertTrue(SwiftGoL.isAlive(world: world, coords:  [0,0]))
+        XCTAssertFalse(SwiftGoLArray.isAlive(world: world, coords: [0, 0]))
+        world = SwiftGoLArray.bringToLife(world: world, coords: [0,0])
+        XCTAssertTrue(SwiftGoLArray.isAlive(world: world, coords:  [0,0]))
     }
     
     func testACellCanDie() {
-        var world: Set<[Int]> = [[0,0],[0,1]]
+        var world =  World(height: 10, width: 10, state: [[0,0],[0,1]])
         
-        world = SwiftGoL.kill(world: &world, coords: [0,0])
-        XCTAssertTrue(SwiftGoL.isAlive(world: world, coords:  [0,1]))
-        XCTAssertFalse(SwiftGoL.isAlive(world: world, coords: [0, 0]))
+        world = SwiftGoLArray.kill(world: world, coords: [0,0])
+        XCTAssertTrue(SwiftGoLArray.isAlive(world: world, coords:  [0,1]))
+        XCTAssertFalse(SwiftGoLArray.isAlive(world: world, coords: [0, 0]))
     }
     
     func testACellHasNeighbours() {
@@ -38,26 +38,27 @@ class SwiftGolArrayTest: XCTestCase {
              [1,0],        [1,2],
              [2,0], [2,1], [2,2]]
         
-        XCTAssertEqual(expected, SwiftGoL.getNeighbours(coords: [1,1]))
+        XCTAssertEqual(expected, SwiftGoLArray.getNeighbours(coords: [1,1]))
     }
     
     func testCanCountLivingNeighbours(){
-        let world: Set<[Int]> = [[0,1],[1,0], [1,1], [1,2],[2,1]]
+        let world = World(height: 10, width: 10, state: [[0,1],[1,0], [1,1], [1,2],[2,1]])
         
-        XCTAssertEqual(4, SwiftGoL.countLivingNeighbours(world: world, coords: [1,1]))
-        XCTAssertEqual(3, SwiftGoL.countLivingNeighbours(world: world, coords: [0,0]))
-        XCTAssertEqual(1, SwiftGoL.countLivingNeighbours(world: world, coords: [3,1]))
+        XCTAssertEqual(4, SwiftGoLArray.countLivingNeighbours(world: world, coords: [1,1]))
+        XCTAssertEqual(3, SwiftGoLArray.countLivingNeighbours(world: world, coords: [0,0]))
+        XCTAssertEqual(1, SwiftGoLArray.countLivingNeighbours(world: world, coords: [3,1]))
     }
     
     func testACellWithTwoLivingNeighboursComesToLife() {
-        let world: Set<[Int]> = [[0,0], [1,0], [1,2]]
-        let new_world = SwiftGoL.next(world: world)
-        XCTAssertTrue(SwiftGoL.isAlive(world: new_world, coords: [1,1]))
+        let world = World(height: 10, width: 10, state: [[0,0], [1,0], [1,2]])
+        
+        let new_world = SwiftGoLArray.next(world: world)
+        XCTAssertTrue(SwiftGoLArray.isAlive(world: new_world, coords: [1,1]))
     }
     
     func testAWorldPerforms() {
-        let world: Set<[Int]> = [[0,0], [1,0], [1,2]]
-        measure{SwiftGoL.next(world: world)}
+        var world = World(height: 5, width: 5, state: [[0,0], [1,0], [1,2]])
+        measure{ world = SwiftGoLArray.next(world: world)}
     }
 
 }

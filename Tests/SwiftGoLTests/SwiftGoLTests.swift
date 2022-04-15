@@ -49,7 +49,7 @@ final class SwiftGoLTests: XCTestCase {
     }
     
     func testAWorldPerforms() {
-        let world: Set<[Int]> = [[0,0], [1,0], [1,2]]
-        measure{SwiftGoL.next(world: world)}
+        var world: Set<[Int]> = [[0,0], [1,0], [1,2]]
+        measure{world = SwiftGoL.next(world: world)}
     }
 }
