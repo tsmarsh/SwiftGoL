@@ -12,66 +12,67 @@ public class World {
         self.world = Array(repeating: false, count: height * width)
     }
     
-    convenience init(height: Int, width: Int, state: [[Int]]) {
+    convenience init(height: Int, width: Int, state: [Coord]) {
         self.init(height: height, width: width)
         for coord in state {
-            SwiftGoLArray.bringToLife(world: self, coords: coord)
+            _ = SwiftGoLArray.bringToLife(world: self, coords: coord)
         }
     }
     
 }
 
-public struct SwiftGoLArray {
+public struct SwiftGoLArray : Gol{
     
-    static func toIndex(world: World, coord: [Int]) -> Int {
-        return coord[0] + coord[1] * world.width
+    public typealias T = World
+    
+    static func toIndex(world: World, coord: Coord) -> Int {
+        return coord.x + coord.y * world.width
     }
     
-    static func inBounds(world: World, coord: [Int]) -> Bool {
-        return coord[0] < world.width && coord[0] >= 0 && coord[1] < world.height && coord[1] >= 0
+    static func inBounds(world: World, coord: Coord) -> Bool {
+        return coord.x >= 0 && coord.x < world.width && coord.y >= 0 && coord.y < world.height && coord.y >= 0
     }
     
-    static func isAlive(world: World, coords: [Int]) -> Bool{
+    public static func isAlive(world: World, coords: Coord) -> Bool{
         return inBounds(world: world, coord: coords) ? world.world[toIndex(world: world, coord: coords)] : false
     }
 
-    @discardableResult
-    static func bringToLife(world: World, coords: [Int]) -> World{
+
+    public static func bringToLife(world: World, coords: Coord) -> World{
         if inBounds(world: world, coord: coords){
             world.world[toIndex(world: world, coord: coords)] = true
         }
         return world
     }
     
-    @discardableResult
-    static func kill(world: World, coords: [Int]) -> World{
+    public static func kill(world: World, coords: Coord) -> World{
         if inBounds(world: world, coord: coords){
             world.world[toIndex(world: world, coord: coords)] = false
         }
         return world
     }
     
-    static func getNeighbours(coords: [Int]) -> Set<[Int]> {
-        let vec_coords = simd_long2(coords[0], coords[1])
+    static func getNeighbours(coords: Coord) -> [Coord] {
+        let vec_coords = simd_long2(coords.x, coords.y)
         
-        return Set(NEIGHBOURS.map {
+        return NEIGHBOURS.map {
             let neighbour = $0 &+ vec_coords
-            return [neighbour[0], neighbour[1]]
-        })
+            return Coord(neighbour.x, neighbour.y)
+        }
     }
     
-    static func countLivingNeighbours(world: World, coords: [Int]) -> Int {
+    public static func countLivingNeighbours(world: World, coords: Coord) -> Int {
         let neighbours = getNeighbours(coords: coords)
         return neighbours.filter {
             isAlive(world: world, coords: $0)
         }.count
     }
     
-    static func toCoords(world: World, index: Int) -> [Int] {
-        return [index % world.width, index / world.width]
+    static func toCoords(world: World, index: Int) -> Coord {
+        return Coord(index % world.width, index / world.width)
     }
     
-    static func next(world: World) -> World{
+    public static func next(world: World) -> World{
         let new_world = World(height: world.height, width: world.width)
         
         let coords = world.world.enumerated().map{
@@ -82,14 +83,15 @@ public struct SwiftGoLArray {
             (coord) in countLivingNeighbours(world: world, coords: coord)
         }
         
+        
         for i in 0..<world.world.count {
             if isAlive(world: world, coords: coords[i]) {
                 if ((neighbours[i] >= 2) && (neighbours[i] <= 3)) {
-                    bringToLife(world: new_world, coords: coords[i])
+                    _ = bringToLife(world: new_world, coords: coords[i])
                 }
             }
             if neighbours[i] == 3 {
-                bringToLife(world: new_world, coords: coords[i])
+                _ = bringToLife(world: new_world, coords: coords[i])
             }
         }
         
