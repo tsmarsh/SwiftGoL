@@ -35,10 +35,10 @@ public struct Coord : Hashable{
 public class WorldMap {
 
     var world = Set<Coord>()
-    var min_x = 0
-    var max_x = 0
-    var min_y = 0
-    var max_y = 0
+    var min_x: Int = 0
+    var max_x: Int = 0
+    var min_y: Int = 0
+    var max_y: Int = 0
     
     convenience init(state: [Coord]) {
         self.init()
@@ -86,7 +86,7 @@ public struct SwiftGoL: Gol {
     }
     
     static func getNeighbours(coords: Coord) -> [Coord] {
-        let vec_coords = simd_long2(coords.x, coords.y)
+        let vec_coords = simd_long2(simd_long1(coords.x), simd_long1(coords.y))
         
         return NEIGHBOURS.map {
             let neighbour = $0 &+ vec_coords
