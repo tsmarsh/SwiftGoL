@@ -120,21 +120,32 @@ public struct SwiftGoLInt : Gol{
         return UInt8(neighbours.nonzeroBitCount)
     }
     
+    public static func processModule(module: UInt64) -> UInt64{
+        var newMod : UInt64 = 0
+        var i: Int = 0
+        for y in 1...6 {
+            for x in 1...6 {
+                let offset = toIndex(width: 8, coord: Coord(x, y))
+                
+                let fence = (mask << i)
+                
+                let alive = module & (1 << offset) >= 1
+                let neighbours = (module & fence).nonzeroBitCount
+                
+                if alive && neighbours >= 2 && neighbours <= 3 {
+                    newMod |= 1 << offset
+                }
+                
+                if neighbours == 3 {
+                    newMod |= 1 << offset
+                }
+                i += 1
+            }
+        }
+        return newMod
+    }
     public static func next(world: Game) -> Game {
-//        for module in world.world {
-//            var i = 0
-//            for _ in 0...7 {
-//                for _ in 0...7 {
-//                    let mask: UInt64 = 1 << i
-//                    let value = (module & mask) >= 1
-//                    
-//                    i += 1
-//                    
-//                    row.append(contentsOf: value ? "X" : ".")
-//                }
-//                row.append(contentsOf: "\n")
-//            }
-//        }
+        world.world = world.world.map(processModule(module:))
         return world
     }
 }

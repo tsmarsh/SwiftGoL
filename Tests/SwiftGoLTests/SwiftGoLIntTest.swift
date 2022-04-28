@@ -50,18 +50,10 @@ class SwiftGolIntTest: XCTestCase {
         XCTAssertFalse(SwiftGoLInt.isAlive(world: world, coords: Coord(0, 0)))
     }
     
-//    func testACellHasNeighbours() {
-//        let expected =
-//            Set([Coord(0, 0), Coord(0, 1), Coord(0, 2),
-//             Coord(1, 0),        Coord(1, 2),
-//             Coord(2, 0), Coord(2, 1), Coord(2, 2)])
-//
-//        XCTAssertEqual(expected, Set(SwiftGoLInt.getNeighbours(coords: Coord(1, 1))))
-//    }
     
     func testCanCountLivingNeighbours(){
         let world = Game(moduleCount: 1, state: [Coord(0, 1),Coord(1, 0), Coord(1, 1), Coord(1, 2),Coord(2, 1)])
-
+        
         XCTAssertEqual(4, SwiftGoLInt.countLivingNeighbours(world: world, coords: Coord(1, 1)))
         XCTAssertEqual(3, SwiftGoLInt.countLivingNeighbours(world: world, coords: Coord(0, 0)))
         XCTAssertEqual(1, SwiftGoLInt.countLivingNeighbours(world: world, coords: Coord(3, 1)))
@@ -69,6 +61,7 @@ class SwiftGolIntTest: XCTestCase {
     
     func testACellWithTwoLivingNeighboursComesToLife() {
         let world = Game(moduleCount: 1, state: [Coord(0, 0), Coord(1, 0), Coord(1, 2)])
+        SwiftGoLInt.printModule(module: world.world[0])
         
         let new_world = SwiftGoLInt.next(world: world)
         XCTAssertTrue(SwiftGoLInt.isAlive(world: new_world, coords: Coord(1, 1)))
