@@ -55,7 +55,6 @@ public struct SwiftGoLInt : Gol{
             }
             row.append(contentsOf: "\n")
         }
-        print(row)
     }
     
     static func toLocation(world: Game, coord: Coord) -> Location {
@@ -78,9 +77,6 @@ public struct SwiftGoLInt : Gol{
         let bucket = world.world[ loc.bucket ]
         let mask: UInt64 = 1 << loc.bit
         
-        print("isAlive Bucket", bucket)
-        printModule(module: bucket)
-        
         return bucket & mask >= 1
     }
     
@@ -92,7 +88,6 @@ public struct SwiftGoLInt : Gol{
         let bucket = world.world[ loc.bucket ]
         let mask: UInt64 = 1 << loc.bit
         
-        print("Bringing to life: ", loc.bucket, loc.bit, bucket, mask)
         world.world[ loc.bucket ] = bucket | mask
         
         return world
@@ -123,11 +118,12 @@ public struct SwiftGoLInt : Gol{
     public static func processModule(module: UInt64) -> UInt64{
         var newMod : UInt64 = 0
         var i: Int = 0
+        
         for y in 1...6 {
             for x in 1...6 {
                 let offset = toIndex(width: 8, coord: Coord(x, y))
                 
-                let fence = (mask << i)
+                let fence = (mask << (offset - 9))
                 
                 let alive = module & (1 << offset) >= 1
                 let neighbours = (module & fence).nonzeroBitCount
