@@ -10,14 +10,14 @@ let NEIGHBOURS: Set<simd_long2> = [simd_long2(x: -1, y: -1),
                                      simd_long2(x: 1, y: 0),
                                      simd_long2(x: 1, y: 1)]
 
-let NEIGHBOUR_MASKS: [simd_ulong1] = [simd_ulong1(0x8000000000000000),
-                                   simd_ulong1(0x7E00000000000000),
-                                   simd_ulong1(0x100000000000000),
-                                   simd_ulong1(0x80808080808000),
-                                   simd_ulong1(0x1010101010100),
-                                   simd_ulong1(0x80),
-                                   simd_ulong1(0x7E),
-                                   simd_ulong1(1)]
+let NEIGHBOUR_MASKS: [simd_ulong1] = [simd_ulong1(0x8000000000000000), //(5,5)
+                                   simd_ulong1(0x7E00000000000000), //6th row
+                                   simd_ulong1(0x100000000000000),  //(5,0)
+                                   simd_ulong1(0x80808080808000), //6th column
+                                   simd_ulong1(0x1010101010100), //1st column
+                                   simd_ulong1(0x80), //(6,0)
+                                   simd_ulong1(0x7E), //1st row
+                                   simd_ulong1(1)] //(0,0
 
 
 public protocol Gol {
