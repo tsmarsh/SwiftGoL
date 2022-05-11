@@ -49,7 +49,8 @@ final class SwiftGoLTests: XCTestCase {
         let new_world = SwiftGoL.next(world: world)
         XCTAssertTrue(SwiftGoL.isAlive(world: new_world, coords: Coord(1, 1)))
     }
-    
+
+
     func testAWorldPerforms() {
         var world = WorldMap(state: [Coord(0, 0), Coord(1, 0), Coord(1, 2)])
         measure{world = SwiftGoL.next(world: world)}

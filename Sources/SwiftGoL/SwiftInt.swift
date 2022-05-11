@@ -140,7 +140,39 @@ public struct SwiftGoLInt : Gol{
         }
         return newMod
     }
+
+
+    public static func indexToCoord(world: Game, index: Int) -> Coord {
+        Coord(index % world.width, index / world.width)
+    }
+
+    static func toIndex(world: Game, coord: Coord) -> Int {
+        return coord.x + coord.y * world.width
+    }
+
+    static func inBounds(world: Game, coord: Coord) -> Bool {
+        return coord.x >= 0 && coord.x < world.width && coord.y >= 0 && coord.y < world.height && coord.y >= 0
+    }
+
+
     public static func next(world: Game) -> Game {
+
+        let neighbours : [[Coord]] = world.world.enumerated().map { (i, _) in
+            SwiftGoLArray.getNeighbours(coords: indexToCoord(world: world, index: i))
+        }
+
+        let modules: [[UInt64]] = neighbours.map{(n: [Coord]) in
+            return n.map{ (c: Coord) in
+                inBounds(world: world, coord: c) ?
+                    world.world[toIndex(world: world, coord: c)]
+                        :
+                    0
+                }
+            }
+
+        NEIGHBOUR_MASKS.enumerated().map{ (i, mask) in
+            
+        }
         world.world = world.world.map(processModule(module:))
         return world
     }

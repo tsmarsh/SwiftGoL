@@ -66,7 +66,15 @@ class SwiftGolIntTest: XCTestCase {
         let new_world = SwiftGoLInt.next(world: world)
         XCTAssertTrue(SwiftGoLInt.isAlive(world: new_world, coords: Coord(1, 1)))
     }
-    
+
+    func testACellBetweenTwoModulesComesToLife() {
+        let world = Game(moduleCount: 2, state: [Coord(5, 1), Coord(7, 1), Coord(4, 3), Coord(6,3)])
+
+        let new_world = SwiftGoLInt.next(world: world)
+        XCTAssertTrue(SwiftGoLInt.isAlive(world: new_world, coords: Coord(5, 2)))
+        XCTAssertTrue(SwiftGoLInt.isAlive(world: new_world, coords: Coord(6, 2)))
+    }
+
     func testAWorldPerforms() {
         var world = Game(moduleCount: 1, state: [Coord(0, 0), Coord(1, 0), Coord(1, 2)])
         measure{ world = SwiftGoLInt.next(world: world)}
