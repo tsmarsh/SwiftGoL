@@ -10,14 +10,14 @@ let NEIGHBOURS: Set<simd_long2> = [simd_long2(x: -1, y: -1),
                                      simd_long2(x: 1, y: 0),
                                      simd_long2(x: 1, y: 1)]
 
-let NEIGHBOUR_MASKS: [simd_ulong1] = [simd_ulong1(0x8000000000000000), //(5,5)
-                                   simd_ulong1(0x7E00000000000000), //6th row
-                                   simd_ulong1(0x100000000000000),  //(5,0)
-                                   simd_ulong1(0x80808080808000), //6th column
-                                   simd_ulong1(0x1010101010100), //1st column
-                                   simd_ulong1(0x80), //(6,0)
-                                   simd_ulong1(0x7E), //1st row
-                                   simd_ulong1(1)] //(0,0
+let NEIGHBOUR_MASKS: [UInt64] = [0x40000000000000, //(5,5)
+                                 0x7E000000000000, //6th row
+                                 0x2000000000000,  //(5,0)
+                                 0x40404040404000, //6th column
+                                 0x2020202020200, //1st column
+                                 0x4000, //(6,0)
+                                 0x7E00, //1st row
+                                 0x200] //(0,0
 
 
 public protocol Gol {
@@ -98,8 +98,8 @@ public struct SwiftGoL: Gol {
     static func getNeighbours(coords: Coord) -> [Coord] {
         let vec_coords = simd_long2(simd_long1(coords.x), simd_long1(coords.y))
         
-        return NEIGHBOURS.map {
-            let neighbour = $0 &+ vec_coords
+        return NEIGHBOURS.map { n in
+            let neighbour = n &+ vec_coords
             return Coord(neighbour[0], neighbour[1])
         }
     }

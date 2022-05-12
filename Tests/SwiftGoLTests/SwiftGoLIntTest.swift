@@ -67,6 +67,71 @@ class SwiftGolIntTest: XCTestCase {
         XCTAssertTrue(SwiftGoLInt.isAlive(world: new_world, coords: Coord(1, 1)))
     }
 
+    func testTranslatesNeighbour0() {
+        let expected: UInt64 = 1
+        let full = UInt64.max;
+        let neighbours = [full,0,0,0,0,0,0,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+    func testTranslatesNeighbour1() {
+        let expected: UInt64 = 0x7E
+        let full = UInt64.max;
+        let neighbours = [0, full,0,0,0,0,0,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+    func testTranslatesNeighbour2() {
+        let expected: UInt64 = 0x80
+        let full = UInt64.max
+        let neighbours = [0, 0,full,0,0,0,0,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+    func testTranslatesNeighbour3() {
+        let expected: UInt64 = 0x1010101010100
+        let full = UInt64.max
+        let neighbours = [0,0,0,full,0,0,0,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+    func testTranslatesNeighbour4() {
+        let expected: UInt64 = 0x80808080808000
+        let full = UInt64.max
+        let neighbours = [0,0,0,0,full,0,0,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+
+    func testTranslatesNeighbour5() {
+        let expected: UInt64 = 0x100000000000000
+        let full = UInt64.max
+        let neighbours = [0,0,0,0,0,full,0,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+    func testTranslatesNeighbour6() {
+        let expected: UInt64 = 0x7E00000000000000
+        let full = UInt64.max
+        let neighbours = [0,0,0,0,0,0,full,0]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
+    func testTranslatesNeighbour7() {
+        let expected: UInt64 = 0x8000000000000000
+        let full = UInt64.max
+        let neighbours = [0,0,0,0,0,0,0,full]
+
+        XCTAssertEqual(expected,SwiftGoLInt.translateNeighbours(module: 0, neighbours: neighbours));
+    }
+
     func testACellBetweenTwoModulesComesToLife() {
         let world = Game(moduleCount: 2, state: [Coord(5, 1), Coord(7, 1), Coord(4, 3), Coord(6,3)])
 
