@@ -39,7 +39,7 @@ public struct SwiftGoLInt: Gol {
         return coord.x + coord.y * width
     }
 
-    static func printModule(module: UInt64) {
+    public static func moduleToString(module: UInt64) -> String{
         var i = 0
 
         var row = ""
@@ -54,6 +54,15 @@ public struct SwiftGoLInt: Gol {
             }
             row.append(contentsOf: "\n")
         }
+
+        return row
+    }
+
+    public static func worldToString(world: Game) -> String{
+        world.world.map(moduleToString(module:)).reduce("", {
+            (s, cell) in
+            s + "\n--------\n" + cell
+        })
     }
 
     static func toLocation(world: Game, coord: Coord) -> Location {
