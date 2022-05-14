@@ -1,14 +1,14 @@
 import simd
 
 
-let NEIGHBOURS: Set<simd_long2> = [simd_long2(x: -1, y: -1),
-                                     simd_long2(x: -1, y: 0),
-                                     simd_long2(x: -1, y: 1),
-                                     simd_long2(x: 0, y: -1),
+let NEIGHBOURS: [simd_long2] = [simd_long2(x: -1, y: 1),
                                      simd_long2(x: 0, y: 1),
-                                     simd_long2(x: 1, y: -1),
-                                     simd_long2(x: 1, y: 0),
-                                     simd_long2(x: 1, y: 1)]
+                                     simd_long2(x: 1, y: 1),
+                                     simd_long2(x: -1, y: 0),
+                                     simd_long2(x: +1, y: 0),
+                                     simd_long2(x: -1, y: -1),
+                                     simd_long2(x: 0, y: -1),
+                                     simd_long2(x: 1, y: -1)]
 
 let NEIGHBOUR_MASKS: [UInt64] = [0x40000000000000, //(5,5)
                                  0x7E000000000000, //6th row

@@ -55,8 +55,8 @@ public struct SwiftGoLArray : Gol{
     static func getNeighbours(coords: Coord) -> [Coord] {
         let vec_coords = simd_long2(coords.x, coords.y)
         
-        return NEIGHBOURS.map {
-            let neighbour = $0 &+ vec_coords
+        return NEIGHBOURS.map { n in
+            let neighbour = n &+ vec_coords
             return Coord(neighbour.x, neighbour.y)
         }
     }

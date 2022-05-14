@@ -11,9 +11,12 @@ public class Game {
 
     public var world: [UInt64]
 
+    public var neighbours: [[Int]] = []
+
     init(moduleCount: Int) {
         self.width = moduleCount
         self.world = Array(repeating: 0, count: Int(truncatingIfNeeded: width * width))
+        self.neighbours = SwiftGoLInt.generateNeighbourSets(world: self)
     }
 
     convenience init(moduleCount: Int, state: [Coord]) {
@@ -124,6 +127,7 @@ public struct SwiftGoLInt: Gol {
 
 
     public static func translateNeighbours(module: UInt64, neighbours: [UInt64]) -> UInt64 {
+        let cleaned = cleanModule(module: module)
         let translations:[Int8] = [-54,-48,-42,-6,6,42,48,54]
 
         let neigh_mask = zip(NEIGHBOUR_MASKS, neighbours)
@@ -138,7 +142,7 @@ public struct SwiftGoLInt: Gol {
             original << shift
         }
 
-        return translated.reduce(module, {(result: UInt64, translated: UInt64) in
+        return translated.reduce(cleaned, {(result: UInt64, translated: UInt64) in
             result | translated
         })
     }
@@ -186,24 +190,33 @@ public struct SwiftGoLInt: Gol {
         module & 0x7E7E7E7E7E7E00
     }
 
-    public static func next(world: Game) -> Game {
-
+    public static func generateNeighbourSets(world: Game) -> [[Int]] {
         let neighbours: [[Coord]] = world.world.enumerated().map { (i, _) in
             SwiftGoLArray.getNeighbours(coords: indexToCoord(world: world, index: i))
         }
 
-        let modules: [[UInt64]] = neighbours.map { (n: [Coord]) in
+        return neighbours.map { (n: [Coord]) in
             n.map { (c: Coord) in
                 inBounds(world: world, coord: c) ?
-                        world.world[toIndex(world: world, coord: c)]
+                        toIndex(world: world, coord: c)
                         :
-                        0
+                        -1
             }
+        }
+    }
+
+    public static func next(world: Game) -> Game {
+
+        let modules: [[UInt64]] = world.neighbours.map{ ns in
+            ns.map{i in i >= 0 ? world.world[i] : 0}
         }
 
         let edged_world = zip(world.world, modules).map{ module, neighbours in
-            translateNeighbours(module: cleanModule(module: module) , neighbours: neighbours)
+            translateNeighbours(module: module , neighbours: neighbours)
         }
+
+        let ew = Game(moduleCount: 2)
+        ew.world = edged_world
 
         world.world = edged_world.map(processModule(module:))
 
